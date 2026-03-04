@@ -2,6 +2,23 @@
 // Boilerplate Code to Set Up Server
 // ---------------------------------
 
+// importing our Node modules
+import express from "express"
+import fs from "fs/promises"
+
+// Creating an instance of the express module so that we can use all the methods that come with it
+const app = express()
+
+// Tell express which port to listen to to receive requests
+const port = 3000;
+
+// This server will be receiving JSON and responding in JSON
+app.use(express.json())
+
+app.listen(port, () => {
+  console.log(`My server is listening on port: ${port}`)
+})
+
 // ---------------------------------
 // Helper Functions
 // ---------------------------------
@@ -10,20 +27,54 @@
 // Our very first API Endpoints
 // ---------------------------------
 
+// app.get() takes in 2 parameters: 
+  // 1. The endpoint, which defines what URL path the server should listen to
+  // 2. The callback function, what we do when we receive a request at this endpoint.
+  //.       The callback function takes in 2 parameters: the request & response. 
+app.get("/", (req, res) => {
+  // The res.send() method sends back a String as a response
+  res.send("Hello World!")
+})
+
+app.get("/say-good-morning", (req, res) => {
+  res.send("Good morning!")
+})
+
+app.get("/get-user/:userName", (req, res) => {
+  const userName = req.params.userName
+  res.send(`Hello, ${userName}!`)
+})
+
+app.get("/order-tacos/:protein/:numTacos", (req, res) => {
+  const protein = req.params.protein
+  const numTacos = req.params.numTacos
+
+  res.send(`Thanks for your order! You ordered ${numTacos} ${protein} tacos.`)
+}) 
+
 // --------------------------------
 // 🚀 LEVEL 1 CHALLENGES 
 // --------------------------------
 
 // 1. 🏆 Add a /goodbye endpoint that responds with "Goodbye, see you later!"
 
+app.get("/goodbye", (req, res) => {
+  res.send("GoodBye, see you later!")
+})
 // 2. 🏆 Add a /happy-birthday endpoint that responds with "Happy birthday!!!"
-
+app.get("/happy-birthday", (req, res) => {
+  res.send("Happy birthday!!!")
+})
 // --------------------------------
 // 🚀 LEVEL 2 CHALLENGES — ADDING DYNAMIC PARAMETERS
 // --------------------------------
 
 // 1. 🏆 Add a /happy-birthday/:name endpoint says "Happy birthday, [name]!!!"
 
+app.get("/happy-birthday/:name", (req, res) => {
+  const name = req.params.name
+  res.send(`Happy birthday, ${name}!!!`)
+})
 // 2. 🏆 Add a /say-hello/:name/:language endpoint that says hello in multiple languages. Examples:
 //      - If language = "English", respond with "Hello, [name]!"
 //      - If language = "Spanish", respond with "Hola, [name]!"
@@ -31,13 +82,38 @@
 //      - If language = "Turkish", respond with "Merhaba, [name]!"
 //      - Add as many languages as you want! 
 //      - Otherwise, respond with "Language not supported."" 
-
+app.get("/say-hello/:name/:language", (req, res) => {
+  const name = req.params.name 
+  const language = req.params.language
+  
+  if (language === "English") {
+    res.send(`Hello, ${name}!`)
+  } else if (language === "Spanish"){
+    res.send(`Hola, ${name}!`)
+  } else if (language === "Vietnamese") {
+    res.send(`Xin chao, ${name}!`)
+  } else if (language === "Turkish") {
+    res.send(`Merhaba, ${name}!`)
+  } else if (language === "Japanese") {
+    res.send(`Konnichiwa, ${name}!`)
+  } else {
+    res.send("Language not supported.")
+  }
+})
 // --------------------------------
 // 🚀 LEVEL 3 CHALLENGES — EVEN MORE DYNAMIC PARAMETERS
 // --------------------------------
 
-// 1. 🏆 Add a /calculate-dog-years/:dogName/:humanYears endpoint that calculates a dog's age in dog years. Refer to your dogAgeCalculator.js file. 
+app.get("/", (req, res) => { })
 
+// 1. 🏆 Add a /calculate-dog-years/:dogName/:humanYears endpoint that calculates a dog's age in dog years. Refer to your dogAgeCalculator.js file. 
+app.get("/calculate-dog-years/dogName/:humanYears", (req, res) => { 
+  const dogName = req.params.dogName
+  const humanYears = req.params.humanYears 
+
+  const dogYears = humanYears * 7
+  res.send(`${dogName} is ${humanYears} human years old, which is ${dogYears} dog years!`)
+})
 // 2. 🏆 Add a /calculate-tip/:bill/:tipPercentage/:numGuests endpoint that calculates the amount each guests owes. Refer to your tipCalculator.js file. 
 
 // --------------------------------
